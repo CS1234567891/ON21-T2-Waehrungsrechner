@@ -50,6 +50,7 @@ function format(date: Date) {
   return year + '-' + month + '-' + day;
 }
 
+//Not possible, because it is not available in the free api
 export function timeseriesAsync({ startDate, dateOffset }: TimeseriesOptions = { startDate: new Date(), dateOffset: 30 }): Promise<ResponseTimeseries> {
   startDate = startDate || new Date();
   const endDate = new Date(startDate);
