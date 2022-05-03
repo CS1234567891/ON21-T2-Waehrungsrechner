@@ -16,9 +16,34 @@
 </head>
 
 <body>
-    <my-beispiel></my-beispiel>
-    <input type="text" id="myInput" />
-    <button type="button" class="btn btn-primary">Primary</button>
+    <div>
+        <div class="input-group mb-3">
+            <input type="number" id="number1" value="1" class="form-control"
+                aria-describedby="inputGroup-sizing-default">
+            <!-- <input type="number" id="number1" value="1" /> -->
+            <select name="currency_code1" id="currency_code1" disabled></select>
+        </div>
+    </div>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown button
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+    </div>
+    <div>
+        <div class="input-group mb-3">
+            <input type="number" id="number2" class="form-control" aria-describedby="inputGroup-sizing-default">
+            <!-- <input type="number" id="number2"/> -->
+            <select name="currency_code2" id="currency_code2"></select>
+        </div>
+        <!-- <input type="number" id="number2" /> -->
+        <!-- <select name="currency_code2" id="currency_code2"></select> -->
+    </div>
 </body>
 
 </html>
