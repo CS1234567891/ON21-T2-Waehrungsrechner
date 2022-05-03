@@ -1,4 +1,5 @@
 import { latestAsync } from "./exchangeratesapi";
+import { calculate, calculateReverse } from "./calculate";
 
 (async function () {
   const currencyCode1 = document.querySelector<HTMLSelectElement>("#currency_code1");
@@ -19,5 +20,20 @@ import { latestAsync } from "./exchangeratesapi";
       const option2 = new Option(rate, latest.rates[rate].toString());
       currencyCode2.add(option2);
     }
+
+    currencyCode2.addEventListener('change', function () {
+      number2!.value = calculate(number1!.value, this.value);
+    });
+
+    // dispatch change event to trigger the initial default calculation
+    currencyCode2.dispatchEvent(new Event("change"));
+
+    number1.addEventListener('change', function () {
+      number2!.value = calculate(this.value, currencyCode2.options[currencyCode2.selectedIndex].value);
+    });
+
+    number2.addEventListener('change', function () {
+      number1!.value = calculateReverse(this.value, currencyCode2.options[currencyCode2.selectedIndex].value);
+    });
   }
 })();
