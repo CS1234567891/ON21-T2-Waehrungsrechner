@@ -1,27 +1,8 @@
+import { format } from "./dateformat";
+import { HistoricRatesOptions, ResponseHistoricRates, ResponseLatest, ResponseTimeseries, TimeseriesOptions } from "./exchangeratesapi.d";
+
 const API_KEY: string = 'eebfd55409060b990bf7277c0025634d';
 const BASE_URL: string = 'http://api.exchangeratesapi.io/v1/';
-
-export type ResponseLatest = {
-  success: boolean,
-  timestamp: number,
-  base: string,
-  date: string,
-  rates: { [key: string]: number }
-};
-
-export type ResponseTimeseries = {
-  success: boolean,
-  timestamp: number,
-  base: string,
-  date: string,
-  rates: { [key: string]: number }
-};
-
-
-export type TimeseriesOptions = {
-  startDate: Date,
-  dateOffset: number
-};
 
 async function getAsync<T>(ep: string, params?: URLSearchParams): Promise<T> {
   params = params || new URLSearchParams();
@@ -30,7 +11,7 @@ async function getAsync<T>(ep: string, params?: URLSearchParams): Promise<T> {
     mode: 'cors',
     method: 'GET',
   })
-  const res = await response.json()
+  const res = await response.json();
   if (response.ok) {
     return Promise.resolve<T>(res);
   }
@@ -42,19 +23,21 @@ export function latestAsync(): Promise<ResponseLatest> {
   return getAsync<ResponseLatest>('latest');
 }
 
-function format(date: Date) {
-  var day = ('0' + date.getDate()).slice(-2);
-  var month = ('0' + (date.getMonth() + 1)).slice(-2);
-  var year = date.getFullYear();
-
-  return year + '-' + month + '-' + day;
+export async function historicRatesAsync({ startDate, dateOffset }: HistoricRatesOptions): Promise<ResponseHistoricRates[]> {
+  const date = new Date(startDate || new Date());
+  const response: ResponseHistoricRates[] = [];
+  for (let i = 0; i < (dateOffset || 5); i++) {
+    response.push(await getAsync<ResponseHistoricRates>(format(date)));
+    date.setDate(date.getDate() - 1);
+  }
+  return response;
 }
 
 //Not possible, because it is not available in the free api
-export function timeseriesAsync({ startDate, dateOffset }: TimeseriesOptions = { startDate: new Date(), dateOffset: 30 }): Promise<ResponseTimeseries> {
+export function timeseriesAsync({ startDate, dateOffset }: TimeseriesOptions): Promise<ResponseTimeseries> {
   startDate = startDate || new Date();
   const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() - dateOffset);
+  endDate.setDate(endDate.getDate() - (dateOffset || 30));
 
   return getAsync<ResponseTimeseries>('timeseries', new URLSearchParams({
     start_date: format(startDate),
